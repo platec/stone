@@ -24,6 +24,20 @@ public class Lexer {
         reader = new LineNumberReader(r);
     }
 
+    public Token read() throws ParseException {
+        if (fillQueue(0))
+            return queue.remove(0);
+        else
+            return Token.EOF;
+    }
+
+    public Token peek(int i) throws ParseException {
+        if (fillQueue(i))
+            return queue.get(i);
+        else
+            return Token.EOF;
+    }
+
     public boolean fillQueue(int i) throws ParseException {
         while (i >= queue.size()) {
             if (hasMore)
@@ -41,6 +55,25 @@ public class Lexer {
         }catch (IOException e){
             throw new ParseException(e);
         }
+        if (line == null) {
+            hasMore = false;
+            return;
+        }
+        int lineNo = reader.getLineNumber();
+        Matcher matcher = pattern.matcher(line);
+        matcher.useTransparentBounds(true).useAnchoringBounds(false);
+        int pos = 0;
+        int endPos = line.length();
+        while ( pos < endPos ) {
+            matcher.region(pos, endPos);
+            if (matcher.lookingAt()) {
+                addToken(lineNo, matcher);
+                pos = matcher.end();
+            }else {
+                throw new ParseException("bad token at line "+ lineNo);
+            }
+        }
+        queue.add(new IdToken(lineNo, Token.EOL));
     }
 
 
