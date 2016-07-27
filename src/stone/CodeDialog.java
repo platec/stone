@@ -46,12 +46,15 @@ public class CodeDialog extends Reader {
         JScrollPane pane = new JScrollPane(area);
         int result = JOptionPane.showOptionDialog(null, pane, "Input",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-        if (result == JOptionPane.OK_CANCEL_OPTION) {
+        if (result == JOptionPane.OK_OPTION) {
+            System.out.println("**");
+            System.out.println(area.getText());
             return area.getText();
         }else {
             return null;
         }
     }
+
 
     public static Reader file() throws FileNotFoundException {
         JFileChooser chooser = new JFileChooser();

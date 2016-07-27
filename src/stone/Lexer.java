@@ -38,7 +38,7 @@ public class Lexer {
             return Token.EOF;
     }
 
-    public boolean fillQueue(int i) throws ParseException {
+    private boolean fillQueue(int i) throws ParseException {
         while (i >= queue.size()) {
             if (hasMore)
                 readLine();
@@ -88,6 +88,7 @@ public class Lexer {
                     token = new StrToken(lineNo, toStringLiteral(m));
                 else
                     token = new IdToken(lineNo, m);
+                queue.add(token);
             }
     }
 
@@ -97,7 +98,7 @@ public class Lexer {
         for (int i = 1; i< len; i++) {
             char c = s.charAt(i);
             if (c == '\\' && i + 1 < len) {
-                char c2 = s.charAt(i + 1);
+                int c2 = s.charAt(i + 1);
                 if ( c2 == '"' || c2 == '\\' )
                     c = s.charAt(++i);
                 else if (c2 == 'n') {
